@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #IT's assumed that starting variable is the first typed
-import sys
-from this import helper
+import sys, helper
 
 left, right = 0, 1
 
@@ -84,7 +83,7 @@ def DEL(productions):
 	#seekAndDestroy throw back in:
 	#        – outlaws all left side of productions such that right side is equal to the outlaw
 	#        – productions the productions without outlaws 
-	outlaws, productions = helper.seekAndDestroy(target='e', productions=productions)
+	outlaws, productions = helper.seekAndDestroy(target='%', productions=productions)
 	#add new reformulation of old rules
 	for outlaw in outlaws:
 		#consider every production: old + new resulting important when more than one outlaws are in the same prod.
@@ -132,15 +131,17 @@ if __name__ == '__main__':
 	else:
 		modelPath = 'model.txt'
 	
-	K, V, Productions = helper.loadModel( modelPath )
+	s = ""
+	K, V, Productions = helper.loadModelFromString( s )
 
-	Productions = START(Productions, variables=V)
+	# Productions = START(Productions, variables=V) #S0 -> s
 	Productions = TERM(Productions, variables=V)
 	Productions = BIN(Productions, variables=V)
-	Productions = DEL(Productions)
+	Productions = DEL(Productions) # simbolo de anulables %
 	Productions = UNIT(Productions, variables=V)
 	
-	print( helper.prettyForm(Productions) )
-	print( len(Productions) )
-	open('out.txt', 'w').write(	helper.prettyForm(Productions) )
+	rst = helper.prettyForm(Productions)
+	print(rst)
+	# print( len(Productions) )
+	# open('out.txt', 'w').write(	helper.prettyForm(Productions) )
 
