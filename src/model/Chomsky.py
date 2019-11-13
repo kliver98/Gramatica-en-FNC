@@ -124,14 +124,7 @@ def UNIT(productions, variables):
 		i+=1
 	return result
 
-
-if __name__ == '__main__':
-	if len(sys.argv) > 1:
-		modelPath = str(sys.argv[1])
-	else:
-		modelPath = 'model.txt'
-	
-	s = ""
+def init(s):
 	K, V, Productions = helper.loadModelFromString( s )
 
 	# Productions = START(Productions, variables=V) #S0 -> s
@@ -141,7 +134,26 @@ if __name__ == '__main__':
 	Productions = UNIT(Productions, variables=V)
 	
 	rst = helper.prettyForm(Productions)
-	print(rst)
-	# print( len(Productions) )
-	# open('out.txt', 'w').write(	helper.prettyForm(Productions) )
+
+	return rst
+
+# if __name__ == '__main__':
+# 	if len(sys.argv) > 1:
+# 		modelPath = str(sys.argv[1])
+# 	else:
+# 		modelPath = 'model.txt'
+	
+# 	s = ""
+# 	K, V, Productions = helper.loadModelFromString( s )
+
+# 	# Productions = START(Productions, variables=V) #S0 -> s
+# 	Productions = TERM(Productions, variables=V)
+# 	Productions = BIN(Productions, variables=V)
+# 	Productions = DEL(Productions) # simbolo de anulables %
+# 	Productions = UNIT(Productions, variables=V)
+	
+# 	rst = helper.prettyForm(Productions)
+# 	print(rst)
+# 	# print( len(Productions) )
+# 	# open('out.txt', 'w').write(	helper.prettyForm(Productions) )
 
