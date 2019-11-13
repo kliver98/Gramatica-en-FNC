@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #IT's assumed that starting variable is the first typed
-import sys, helper
-
+import sys
+from . import helper 
 left, right = 0, 1
 
 K, V, Productions = [],[],[]
@@ -124,8 +124,8 @@ def UNIT(productions, variables):
 		i+=1
 	return result
 
-def init(s):
-	K, V, Productions = helper.loadModelFromString( s )
+def init(s, type):
+	K, V, Productions = helper.loadModelFromString( s ) if type=="string" else helper.loadModelFromFile(s)
 
 	# Productions = START(Productions, variables=V) #S0 -> s
 	Productions = TERM(Productions, variables=V)
