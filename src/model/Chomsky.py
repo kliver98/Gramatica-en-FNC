@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #IT's assumed that starting variable is the first typed
 import sys
-from this import helper
+import helper
 
 left, right = 0, 1
 
