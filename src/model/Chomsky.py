@@ -136,7 +136,8 @@ def init(s):
 	rst = helper.prettyForm(Productions)
 
 	return rst
-
+#s = "Terminales:\n"+"\na b c %"+"\nVariables:"+"\nS X Y"+"\nProducciones:"+"\nS -> a X b X | %;"+"\nX -> a Y | b Y | %;"+"\nY -> X | c"
+#print(init(s))
 # if __name__ == '__main__':
 # 	if len(sys.argv) > 1:
 # 		modelPath = str(sys.argv[1])
