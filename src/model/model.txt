@@ -1,8 +1,8 @@
-Terminals:
-a b c e
+Terminales:
+a b c %
 Variables:
 S X Y
-Productions:
-S -> a X b X | e;
-X -> a Y | b Y | e;
+Producciones:
+S -> a X b X | %;
+X -> a Y | b Y | %;
 Y -> X | c
