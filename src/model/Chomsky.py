@@ -125,6 +125,7 @@ def UNIT(productions, variables):
 	return result
 
 def init(s):
+	K, V, Productions = None, None, None
 	K, V, Productions = helper.loadModelFromString( s )
 
 	# Productions = START(Productions, variables=V) #S0 -> s
@@ -143,8 +144,8 @@ def init(s):
 # 	else:
 # 		modelPath = 'model.txt'
 	
-# 	s = ""
-# 	K, V, Productions = helper.loadModelFromString( s )
+# 	# s = ""
+# 	K, V, Productions = helper.loadModelFromFile( modelPath )
 
 # 	# Productions = START(Productions, variables=V) #S0 -> s
 # 	Productions = TERM(Productions, variables=V)
