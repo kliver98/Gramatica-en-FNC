@@ -58,13 +58,15 @@ def TERM(productions, variables):
 #Eliminate non unitry rules––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––BIN
 def BIN(productions, variables):
 	result = []
+	variablesJar2 = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "W", "X", "Y", "Z"]
 	for production in productions:
 		k = len(production[right])
 		#newVar = production[left]
 		if k <= 2:
 			result.append( production )
 		else:
-			newVar = variablesJar.pop(0)
+			#newVar = variablesJar.pop(0)
+			newVar = variablesJar2.pop(0)
 			variables.append(newVar+'1')
 			result.append( (production[left], [production[right][0]]+[newVar+'1']) )
 			i = 1
@@ -124,10 +126,21 @@ def UNIT(productions, variables):
 		i+=1
 	return result
 
-def init(s, type):
-	K, V, Productions = helper.loadModelFromString( s ) if type=="string" else helper.loadModelFromFile(s)
+def steps(s):
+	K, V, Productions = helper.loadModelFromString( s )
 
-	# Productions = START(Productions, variables=V) #S0 -> s
+	Productions1 = TERM(Productions, variables=V)
+	Productions2 = BIN(Productions1, variables=V)
+	Productions3 = DEL(Productions2) # simbolo de anulables %
+	Productions4 = UNIT(Productions3, variables=V)
+
+	return [helper.prettyForm(Productions1),helper.prettyForm(Productions2),
+		helper.prettyForm(Productions3),helper.prettyForm(Productions4)]
+
+def init(s):
+	K, V, Productions = helper.loadModelFromString( s )
+
+	#Productions = START(Productions, variables=V) #S0 -> s
 	Productions = TERM(Productions, variables=V)
 	Productions = BIN(Productions, variables=V)
 	Productions = DEL(Productions) # simbolo de anulables %
