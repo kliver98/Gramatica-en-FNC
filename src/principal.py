@@ -1,3 +1,4 @@
+import os
 from view.principal_ui import *
 from model import Chomsky
 
@@ -32,7 +33,11 @@ class Principal(QtWidgets.QMainWindow, Ui_Root):
             self.tfFNC.setText(c.init(data))
         except Exception as e:
             self.tfFNC.setText("Error, vuelva a intentar")
-            return 
+            return 
+    
+    def cargarArchivo(self):
+        pass
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     window = Principal()

@@ -4,4 +4,3 @@ Z -> a
 Y -> b | c | Z Y | Y Y
 S -> Z A1
 X -> Z Y | Y Y
-S0 -> Z A1
