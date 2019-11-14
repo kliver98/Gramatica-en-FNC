@@ -27,13 +27,18 @@ class Principal(QtWidgets.QMainWindow, Ui_Root):
         self.tfFNC.clear()
         
     def resolver(self):
-        c = Chomsky
+        # c = Chomsky()
         try:
             data = self.tfGramatica.toPlainText()
-            self.tfFNC.setText(c.init(data))
+            open('model.txt', 'w').write(data)
+            path = os.path.abspath("model/dist/Chomsky.exe")
+            # print(path)
+            os.system(path)
+            file = open("out.txt").read()
+            self.tfFNC.setText(file)
         except Exception as e:
             self.tfFNC.setText("Error, vuelva a intentar")
-            return 
+            return
     
     def cargarArchivo(self):
         pass
