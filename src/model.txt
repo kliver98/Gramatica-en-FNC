@@ -1,0 +1,8 @@
+Terminales:
+a b c %
+Variables:
+S X Y
+Producciones:
+S -> a X b X | %;
+X -> a Y | b Y | %;
+Y -> X | c

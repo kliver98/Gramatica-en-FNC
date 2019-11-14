@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 #IT's assumed that starting variable is the first typed
-import sys, helper
+import sys
+# import helper
+import re
+import itertools
 
 left, right = 0, 1
 
 K, V, Productions = [],[],[]
 variablesJar = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "W", "X", "Y", "Z"]
 
-
+def defaultVar():
+	K, V, Productions = [],[],[]
+	variablesJar = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "W", "X", "Y", "Z"]
+	
 def isUnitary(rule, variables):
 	if rule[left] in variables and rule[right][0] in variables and len(rule[right]) == 1:
 		return True
@@ -31,7 +37,7 @@ def START(productions, variables):
 def TERM(productions, variables):
 	newProductions = []
 	#create a dictionari for all base production, like A->a, in the form dic['a'] = 'A'
-	dictionary = helper.setupDict(productions, variables, terms=K)
+	dictionary = setupDict(productions, variables, terms=K)
 	for production in productions:
 		#check if the production is simple
 		if isSimple(production):
@@ -83,7 +89,7 @@ def DEL(productions):
 	#seekAndDestroy throw back in:
 	#        – outlaws all left side of productions such that right side is equal to the outlaw
 	#        – productions the productions without outlaws 
-	outlaws, productions = helper.seekAndDestroy(target='%', productions=productions)
+	outlaws, productions = seekAndDestroy(target='%', productions=productions)
 	#add new reformulation of old rules
 	for outlaw in outlaws:
 		#consider every production: old + new resulting important when more than one outlaws are in the same prod.
@@ -92,7 +98,7 @@ def DEL(productions):
 			if outlaw in production[right]:
 				#the rule is rewrited in all combination of it, rewriting "e" rather than outlaw
 				#this cycle prevent to insert duplicate rules
-				newSet = newSet + [e for e in  helper.rewrite(outlaw, production) if e not in newSet]
+				newSet = newSet + [e for e in  rewrite(outlaw, production) if e not in newSet]
 
 	#add unchanged rules and return
 	return newSet + ([productions[i] for i in range(len(productions)) 
@@ -124,9 +130,111 @@ def UNIT(productions, variables):
 		i+=1
 	return result
 
-def init(s):
-	K, V, Productions = None, None, None
-	K, V, Productions = helper.loadModelFromString( s )
+
+def union(lst1, lst2):
+    final_list = list(set().union(lst1, lst2))
+    return final_list
+
+def loadModel(file):
+	# file = open(modelPath).read()
+	K = (file.split("Variables:\n")[0].replace("Terminales:\n","").replace("\n",""))
+	V = (file.split("Variables:\n")[1].split("Producciones:\n")[0].replace("Variables:\n","").replace("\n",""))
+	P = (file.split("Producciones:\n")[1])
+
+	return cleanAlphabet(K), cleanAlphabet(V), cleanProduction(P)
+
+# def loadModelFromString(strIn):
+# 	K = (strIn.split("Variables:\n")[0].replace("Terminales:\n","").replace("\n",""))
+# 	V = (strIn.split("Variables:\n")[1].split("Producciones:\n")[0].replace("Variables:\n","").replace("\n",""))
+# 	P = (strIn.split("Producciones:\n")[1])
+
+# 	return cleanAlphabet(K), cleanAlphabet(V), cleanProduction(P)
+#Make production easy to work with
+def cleanProduction(expression):
+	result = []
+	#remove spaces and explode on ";"
+	rawRulse = expression.replace('\n','').split(';')
+	
+	for rule in rawRulse:	
+		#Explode evry rule on "->" and make a couple
+		leftSide = rule.split(' -> ')[0].replace(' ','')
+		rightTerms = rule.split(' -> ')[1].split(' | ')
+		for term in rightTerms:
+			result.append( (leftSide, term.split(' ')) )
+	return result
+
+def cleanAlphabet(expression):
+	return expression.replace('  ',' ').split(' ')
+
+def seekAndDestroy(target, productions):
+	trash, ereased = [],[]
+	for production in productions:
+		if target in production[right] and len(production[right]) == 1:
+			trash.append(production[left])
+		else:
+			ereased.append(production)
+			
+	return trash, ereased
+ 
+def setupDict(productions, variables, terms):
+	result = {}
+	for production in productions:
+		#
+		if production[left] in variables and production[right][0] in terms and len(production[right]) == 1:
+			result[production[right][0]] = production[left]
+	return result
+
+
+def rewrite(target, production):
+	result = []
+	#get positions corresponding to the occurrences of target in production right side
+	#positions = [m.start() for m in re.finditer(target, production[right])]
+	positions = [i for i,x in enumerate(production[right]) if x == target]
+	#for all found targets in production
+	for i in range(len(positions)+1):
+ 		#for all combinations of all possible lenght phrases of targets
+ 		for element in list(itertools.combinations(positions, i)):
+ 			#Example: if positions is [1 4 6]
+ 			#now i've got: [] [1] [4] [6] [1 4] [1 6] [4 6] [1 4 6]
+ 			#erease position corresponding to the target in production right side
+ 			tadan = [production[right][i] for i in range(len(production[right])) if i not in element]
+ 			if tadan != []:
+ 				result.append((production[left], tadan))
+	return result
+
+def dict2Set(dictionary):
+	result = []
+	for key in dictionary:
+		result.append( (dictionary[key], key) )
+	return result
+
+def pprintRules(rules):
+	for rule in rules:
+		tot = ""
+		for term in rule[right]:
+			tot = tot +" "+ term
+		print(rule[left]+" -> "+tot)
+
+def prettyForm(rules):
+	dictionary = {}
+	for rule in rules:
+		if rule[left] in dictionary:
+			dictionary[rule[left]] += ' | '+' '.join(rule[right])
+		else:
+			dictionary[rule[left]] = ' '.join(rule[right])
+	result = ""
+	for key in dictionary:
+		result += key+" -> "+dictionary[key]+"\n"
+	return result
+
+if __name__ == '__main__':
+	if len(sys.argv) > 1:
+		modelPath = str(sys.argv[1])
+	else:
+		modelPath = 'model.txt'
+	
+	file = open(modelPath).read()
+	K, V, Productions = loadModel( file )
 
 	# Productions = START(Productions, variables=V) #S0 -> s
 	Productions = TERM(Productions, variables=V)
@@ -134,27 +242,8 @@ def init(s):
 	Productions = DEL(Productions) # simbolo de anulables %
 	Productions = UNIT(Productions, variables=V)
 	
-	rst = helper.prettyForm(Productions)
-
-	return rst
-
-# if __name__ == '__main__':
-# 	if len(sys.argv) > 1:
-# 		modelPath = str(sys.argv[1])
-# 	else:
-# 		modelPath = 'model.txt'
-	
-# 	# s = ""
-# 	K, V, Productions = helper.loadModelFromFile( modelPath )
-
-# 	# Productions = START(Productions, variables=V) #S0 -> s
-# 	Productions = TERM(Productions, variables=V)
-# 	Productions = BIN(Productions, variables=V)
-# 	Productions = DEL(Productions) # simbolo de anulables %
-# 	Productions = UNIT(Productions, variables=V)
-	
-# 	rst = helper.prettyForm(Productions)
-# 	print(rst)
-# 	# print( len(Productions) )
-# 	# open('out.txt', 'w').write(	helper.prettyForm(Productions) )
+	rst = prettyForm(Productions)
+	# print(rst)
+	# print( len(Productions) )
+	open('out.txt', 'w').write(	prettyForm(Productions) )
 
