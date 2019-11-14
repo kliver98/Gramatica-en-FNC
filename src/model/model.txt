@@ -8,10 +8,10 @@ X -> a Y | b Y | %;
 Y -> X | c
 
 Terminales:
-a b
+a b %
 Variables:
 S A B
 Producciones:
 S -> A B A;
-A -> e | a;
-B -> e | b
+A -> % | a;
+B -> % | b
