@@ -19,7 +19,7 @@ class Principal(QtWidgets.QMainWindow, Ui_Root):
         self.tfFNC.clear()
         
     def resolver(self):
-        c = Chomsky()
+        # c = Chomsky()
         try:
             data = self.tfGramatica.toPlainText()
             open('model.txt', 'w').write(data)
