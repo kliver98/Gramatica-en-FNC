@@ -237,4 +237,3 @@ if __name__ == '__main__':
 	# print(rst)
 	# print( len(Productions) )
 	open('out.txt', 'w').write(	prettyForm(Productions) )
-
