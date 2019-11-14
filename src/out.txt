@@ -1,6 +1,13 @@
-A1 -> X A2 | Y X | b | c | Z Y | Y Y
-A2 -> Y X | b | c | Z Y | Y Y
-Z -> a
-Y -> b | c | Z Y | Y Y
-S -> Z A1
-X -> Z Y | Y Y
+Expr -> Expr A1 | AddOp Term | Term B1 | Factor C1 | number | variable | Y D1
+A1 -> AddOp Term
+Term -> Term B1 | Factor C1 | number | variable | Y D1
+B1 -> MulOp Factor
+Z -> ^
+Factor -> Factor C1 | number | variable | Y D1
+C1 -> Z Primary
+Primary -> number | variable | Y D1
+Y -> (
+X -> )
+D1 -> Expr X
+AddOp -> + | -
+MulOp -> * | /

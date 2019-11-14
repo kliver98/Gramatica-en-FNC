@@ -10,10 +10,6 @@ left, right = 0, 1
 K, V, Productions = [],[],[]
 variablesJar = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "W", "X", "Y", "Z"]
 
-def defaultVar():
-	K, V, Productions = [],[],[]
-	variablesJar = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "W", "X", "Y", "Z"]
-	
 def isUnitary(rule, variables):
 	if rule[left] in variables and rule[right][0] in variables and len(rule[right]) == 1:
 		return True
@@ -33,6 +29,7 @@ for nonTerminal in V:
 def START(productions, variables):
 	variables.append('S0')
 	return [('S0', [variables[0]])] + productions
+
 #Remove rules containing both terms and variables, like A->Bc, replacing by A->BZ and Z->c–––––––––––TERM
 def TERM(productions, variables):
 	newProductions = []
@@ -143,12 +140,6 @@ def loadModel(file):
 
 	return cleanAlphabet(K), cleanAlphabet(V), cleanProduction(P)
 
-# def loadModelFromString(strIn):
-# 	K = (strIn.split("Variables:\n")[0].replace("Terminales:\n","").replace("\n",""))
-# 	V = (strIn.split("Variables:\n")[1].split("Producciones:\n")[0].replace("Variables:\n","").replace("\n",""))
-# 	P = (strIn.split("Producciones:\n")[1])
-
-# 	return cleanAlphabet(K), cleanAlphabet(V), cleanProduction(P)
 #Make production easy to work with
 def cleanProduction(expression):
 	result = []

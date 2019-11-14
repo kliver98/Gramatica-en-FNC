@@ -1,8 +1,12 @@
 Terminales:
-a b c %
++ - ( ) ^ number variable
 Variables:
-S X Y
+Expr Term AddOp MulOp Factor Primary
 Producciones:
-S -> a X b X | %;
-X -> a Y | b Y | %;
-Y -> X | c
+Expr -> Term | Expr AddOp Term | AddOp Term;
+Term -> Factor | Term MulOp Factor;
+Factor -> Primary | Factor ^ Primary;
+Primary -> number | variable;
+Primary -> ( Expr );
+AddOp -> + | -;
+MulOp -> * | /
